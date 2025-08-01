@@ -23,7 +23,7 @@ ML_project/
 ├── app.py                                 # Flask backend
 ├── DataSet/
 │   └── student_depression_dataset.csv
-├── model/                                 # Flask backend
+├── model/                                 
 │   ├── depression_model.joblib            # Trained model
 │   └── scaler.joblib                      # Scaler used to preprocess input
 ├── templates/
