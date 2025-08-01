@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Depression Prediction Assessment</title>
+  <style>
+    :root {
+      --primary: #5d5fef;
+      --secondary: #f8f9fa;
+      --text: #343a40;
+      --light: #e9ecef;
+      --dark: #212529;
+      --success: #28a745;
+      --danger: #dc3545;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f0f2f5;
+      color: var(--text);
+      line-height: 1.6;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, var(--primary), #6c5ce7);
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    
+    .header p {
+      opacity: 0.9;
+    }
+    
+    .form-container {
+      padding: 30px;
+    }
+    
+    .form-group {
+      margin-bottom: 25px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark);
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid var(--light);
+      border-radius: 5px;
+      font-size: 16px;
+      transition: all 0.3s;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(93, 95, 239, 0.2);
+      outline: none;
+      background-color: #f8f9fa; /* Light background on focus */
+    }
+    
+    .btn {
+      display: inline-block;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+    }
+    
+    .btn:hover {
+      background-color: #4a4dcc;
+      transform: translateY(-2px);
+    }
+    
+    .result {
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .positive {
+      background-color: rgba(220, 53, 69, 0.1);
+      border-left: 4px solid var(--danger);
+    }
+    
+    .negative {
+      background-color: rgba(40, 167, 69, 0.1);
+      border-left: 4px solid var(--success);
+    }
+    
+    .info-note {
+      font-size: 14px;
+      color: #6c757d;
+      margin-top: 5px;
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #6c757d;
+      font-size: 14px;
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        margin: 15px;
+      }
+      
+      .header {
+        padding: 20px 15px;
+      }
+      
+      .form-container {
+        padding: 20px;
+      }
+    }
+
+    .rating-scale {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+    }
+    
+    .scale-label {
+      font-size: 12px;
+      color: #6c757d;
+    }
+    
+    .result-icon {
+      margin-bottom: 15px;
+    }
+    
+    .result-icon svg {
+      color: "{% if prediction == 'Likely to have Depression' %}var(--danger){% else %}var(--success){% endif %}";
+    }
+    
+    .recommendations {
+      margin: 20px 0;
+      text-align: left;
+    }
+    
+    .recommendations ul {
+      list-style: none;
+      padding: 0 20px;
+    }
+    
+    .recommendations li {
+      margin-bottom: 8px;
+      position: relative;
+      padding-left: 20px;
+    }
+    
+    .recommendations li:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: "{% if prediction == 'Likely to have Depression' %}var(--danger){% else %}var(--success){% endif %}";
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Mental Wellness Assessment</h1>
+      <p>Take a quick assessment to understand your mental health status</p>
+    </div>
+    
+    <div class="form-container">
+      <form action="/predict" method="post">
+        <div class="form-group">
+          <label for="cgpa">Academic Performance (CGPA)</label>
+          <input type="number" name="cgpa" id="cgpa" placeholder="Enter your CGPA" min="0.0" max="10.0" step="0.01">
+        </div>
+        
+        <div class="form-group">
+          <label for="age">Your Age</label>
+          <input type="number" name="age" id="age" placeholder="Enter your age">
+        </div>
+        
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select name="gender" id="gender">
+            <option value="">Select your gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="academic_pressure">Academic Pressure Level</label>
+          <input type="number" name="academic_pressure" id="academic_pressure" placeholder="Enter 1 (low) to 5 (high)" min="1" max="5">
+          <div class="rating-scale">
+            <span class="scale-label">1 - Minimal Stress</span>
+            <span class="scale-label">5 - Extreme Stress</span>
+          </div>
+        </div>
+        
+        <button type="submit" class="btn">Assess My Mental Wellness</button>
+      </form>
+      
+      {% if prediction %}
+        <div class="result {% if prediction == 'Likely to have Depression' %}positive{% else %}negative{% endif %}">
+          <h3>Assessment Result</h3>
+          <div class="result-icon">
+            {% if prediction == 'Likely to have Depression' %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="8" y1="12" x2="16" y2="12"></line>
+              </svg>
+            {% else %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+              </svg>
+            {% endif %}
+          </div>
+          <p>Based on your responses, {% if prediction == 'Likely to have Depression' %}there are indications that you might be experiencing depressive symptoms.{% else %}you don't appear to be showing significant signs of depression.{% endif %}</p>
+          <div class="recommendations">
+            {% if prediction == 'Likely to have Depression' %}
+              <ul>
+                <li>Consider reaching out to a mental health professional</li>
+                <li>Practice self-care and stress management</li>
+                <li>Maintain social connections</li>
+              </ul>
+            {% else %}
+              <ul>
+                <li>Continue healthy habits and self-awareness</li>
+                <li>Monitor your mental wellness regularly</li>
+              </ul>
+            {% endif %}
+          </div>
+          <p class="info-note">This is not a clinical diagnosis. Please consult a healthcare professional for proper evaluation.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  
+  <div class="footer">
+    <p>This tool is designed for educational purposes only.</p>
+  </div>
+</body>
+</html>
