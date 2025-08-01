@@ -20,14 +20,16 @@ This project is a **Flask web app** that uses **Multinomial Logistic Regression*
 
 ```text
 ML_project/
-├── app.py                         # Flask backend
-├── model/
-│   ├── depression_model.joblib    # Trained model
-│   └── scaler.joblib              # Scaler used to preprocess input
+├── app.py                                 # Flask backend
+├── DataSet/
+│   └── student_depression_dataset.csv
+├── model/                                 # Flask backend
+│   ├── depression_model.joblib            # Trained model
+│   └── scaler.joblib                      # Scaler used to preprocess input
 ├── templates/
-│   └── index.html                 # HTML form interface
-├── requirements.txt               # Python dependencies
-└── README.md                      # Project description
+│   └── index.html                         # HTML form interface
+├── requirements.txt                       # Python dependencies
+└── README.md                              # Project description
 ```
 
 
